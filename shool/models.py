@@ -1,7 +1,20 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.db.models.signals import post_delete
+
 from user.models import User
 
+
+class Banner(models.Model):
+    bg = models.ImageField('Бекграунд', upload_to='course', blank=False, null=True)
+    top = models.ImageField('Маленькая картинка', upload_to='course', blank=False, null=True)
+
+    def __str__(self):
+        return f'Баннер {self.id}'
+
+    class Meta:
+        verbose_name = "Баннер"
+        verbose_name_plural = "Баннеры"
 
 class Stage(models.Model):
     number = models.IntegerField(blank=False,null=True)
@@ -100,3 +113,10 @@ class InputTest(models.Model):
     class Meta:
         verbose_name = "Тест-ввод"
         verbose_name_plural = "Тесты-ввод"
+
+
+# def lesson_post_delete(sender, instance, created, **kwargs):
+#     avaiable_lesson = AvaiableLessons.objects.get(lesson=instance)
+#     avaiable_lesson.delete()
+#
+# post_delete.connect(lesson_post_delete, sender=Lesson)

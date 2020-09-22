@@ -4,10 +4,16 @@ from django.core import exceptions as django_exceptions
 from django.db import IntegrityError, transaction
 from rest_framework import exceptions, serializers
 from djoser.conf import settings
-from .models import Achive
+from .models import *
 
 
 User = get_user_model()
+
+class EarnedAchivesSerializer(serializers.ModelSerializer):
+    # achives = serializers.SlugRelatedField(slug_field='id',read_only=True)
+    class Meta:
+        model = EarnedAchive
+        fields = '__all__'
 
 class AchivesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,7 +24,8 @@ class UserSerializer(serializers.ModelSerializer):
     # avatar = serializers.CharField(source='get_avatar',read_only=True,required=False)
     avatar = serializers.SerializerMethodField()
     bg_image = serializers.SerializerMethodField()
-    achives = AchivesSerializer(many=True)
+    earned_achives = EarnedAchivesSerializer(many=True)
+
     class Meta:
         model = User
         fields = [
@@ -31,7 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
             'is_vip',
             'title',
             'bg_image',
-            'achives',
+            'earned_achives',
             'avaiable_courses',
             'finished_courses',
             'progress_courses',
@@ -70,6 +77,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             "password",
             "name",
             "nickname",
+            "promo",
         )
 
     def validate(self, attrs):

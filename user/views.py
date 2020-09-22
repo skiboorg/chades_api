@@ -51,5 +51,6 @@ class getUserEmailbyPhone(APIView):
         else:
             return Response(status=404)
 
-
-
+class GetAllAchives(generics.ListAPIView):
+    queryset = Achive.objects.all()
+    serializer_class = AchivesSerializer

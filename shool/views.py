@@ -13,7 +13,7 @@ class LessonDone(APIView):
         lesson.status = 2
         lesson.save()
         course = Course.objects.get(id=lesson.course.id)
-        print(course)
+        # print(course)
         course_finished_lessons = AvaiableLessons.objects.filter(user=request.user,course=course,status=2)
         print('course_lessons', course.lessons.all().count())
         print('course_finished_lessons', course_finished_lessons.count())
@@ -31,14 +31,16 @@ class LessonDone(APIView):
 
 class CourseOpen(APIView):
     def post(self,request):
+
         checkLessons = AvaiableLessons.objects.filter(user=request.user,course_id=request.data['course'])
+
         if not checkLessons.exists():
-            print(request.data)
+            # print(request.data)
             course = Course.objects.get(id=request.data['course'])
             request.user.progress_courses.add(course)
-            print(course)
+            # print(course)
             lessons = course.lessons.all()
-            print(lessons)
+            # print(lessons)
             x = 0
             for lesson in lessons:
                 AvaiableLessons.objects.create(user=request.user,
@@ -48,7 +50,19 @@ class CourseOpen(APIView):
                 x += 1
             return Response(status=201)
         else:
-            return Response(status=200)
+            allCourceLessons = Course.objects.get(id=request.data['course'])
+            print('allCourceLessons.count()', allCourceLessons.lessons.all().count())
+            print('checkLessons.count()', checkLessons.count())
+            for lesson in allCourceLessons.lessons.all():
+                if checkLessons.filter(lesson=lesson).exists():
+                    print('in')
+                else:
+                    print('not',lesson)
+                    AvaiableLessons.objects.create(user=request.user,
+                                               course=lesson.course,
+                                               lesson=lesson,
+                                               status=0)
+        return Response(status=200)
 
 class GetStages(generics.ListAPIView):
     queryset = Stage.objects.all()
@@ -84,6 +98,10 @@ class GetTests(generics.ListAPIView):
     serializer_class = TestSerializer
 
 
+class GetBanner(generics.ListAPIView):
+    queryset = Banner.objects.all()
+    serializer_class = BannerSerializer
+
 class GetTestChoices(generics.ListAPIView):
     queryset = TestChoice.objects.all()
     serializer_class = TestChoiceSerializer
@@ -98,9 +116,9 @@ class StartScript(APIView):
         for course in courses:
             for user in users:
                 lessons = AvaiableLessons.objects.filter(course=course,user=user)
-                print('course',course)
-                print('user',user)
-                print(lessons)
+                # print('course',course)
+                # print('user',user)
+                # print(lessons)
                 for lesson in lessons:
                     if lesson.status == 0:
                         lesson.status = 1

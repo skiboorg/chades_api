@@ -27,10 +27,6 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-class Achive(models.Model):
-    name = models.CharField(max_length=255,null=True,blank=True)
-    icon = models.ImageField('Фото', upload_to='achives', blank=True, null=True)
-    rules = models.TextField(blank=True,null=True)
 
 class User(AbstractUser):
     username = None
@@ -40,7 +36,7 @@ class User(AbstractUser):
     #                                      on_delete=models.SET_NULL,
     #                                      related_name='own_partner_code',
     #                                      verbose_name='Персональный портнерский код')
-    achives = models.ManyToManyField(Achive, blank=True)
+
     avatar = models.ImageField('Фото', upload_to='user',blank=True,null=True)
     nickname = models.CharField('Ник', max_length=50, blank=True, null=True, default='Иван')
     name = models.CharField('Имя', max_length=50, blank=True, null=True, default='Иван')
@@ -48,6 +44,7 @@ class User(AbstractUser):
     score = models.IntegerField('Баллы', default=0)
     is_vip = models.BooleanField('VIP?', default=False)
     title = models.CharField('Титул', max_length=255, blank=True, null=True)
+    promo = models.CharField('Промокод', max_length=255, blank=True, null=True)
     bg_image = models.ImageField('Картинка', upload_to='user',blank=True,null=True)
     avaiable_courses = models.ManyToManyField('shool.Course',blank=True,verbose_name='Доступные курсы',
                                               related_name='avaiable_courses')
@@ -72,5 +69,13 @@ def user_post_save(sender, instance, created, **kwargs):
 
 post_save.connect(user_post_save, sender=User)
 
+class Achive(models.Model):
+    name = models.CharField('Название', max_length=255,null=True,blank=True)
+    icon = models.ImageField('Иконка', upload_to='achives', blank=True, null=True)
+    rules = models.TextField('Требования', blank=True,null=True)
 
 
+class EarnedAchive(models.Model):
+    user = models.ForeignKey(User, blank=False, null=True, on_delete=models.CASCADE, related_name='earned_achives')
+    achives = models.ForeignKey(Achive, blank=False, null=True, on_delete=models.CASCADE)
+    created_at = models.DateField(auto_now_add=True,null=True)

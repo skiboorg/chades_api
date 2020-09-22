@@ -9,6 +9,7 @@ class StageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CoursesSerializer(serializers.ModelSerializer):
+    depence = serializers.SlugRelatedField(slug_field='description', read_only=True)
     class Meta:
         model = Course
         fields = [
@@ -19,7 +20,10 @@ class CoursesSerializer(serializers.ModelSerializer):
             'score_need',
             'stage',
             'description',
-            'lessons'
+            'lessons',
+            'depence',
+
+
 
         ]
 
@@ -34,6 +38,10 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = '__all__'
 
+class BannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Banner
+        fields = '__all__'
 
 class TestChoiceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,6 +87,7 @@ class FullLessonSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     lessons = FullLessonSerializer(many=True)
+    depence = serializers.SlugRelatedField(slug_field='description',read_only=True)
     class Meta:
         model = Course
         fields = [
@@ -90,6 +99,7 @@ class CourseSerializer(serializers.ModelSerializer):
             'stage',
             'description',
             'lessons',
+            'depence'
         ]
 
 
