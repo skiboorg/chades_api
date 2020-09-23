@@ -33,6 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
             'last_login',
             'avatar',
             'nickname',
+            'name',
             'email',
             'score',
             'is_vip',
