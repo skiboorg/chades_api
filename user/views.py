@@ -24,7 +24,7 @@ class UserUpdate(APIView):
             for f in request.FILES.getlist('avatar'):
                 user.avatar = f
                 user.save()
-            if data['password1'] != '' and data['password1'] == data['password2']:
+            if data['password1'] and data['password1'] == data['password2']:
                 user.set_password(data['password1'])
                 user.save()
             return Response(status=200)
