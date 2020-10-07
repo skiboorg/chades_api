@@ -8,6 +8,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/v1/user/', include('user.urls')),
     path('api/v1/shool/', include('shool.urls')),
+    path('api/v1/game/', include('game.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
 

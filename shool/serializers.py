@@ -14,9 +14,8 @@ class CoursesSerializer(serializers.ModelSerializer):
         model = Course
         fields = [
             'id',
-            'icon_color',
-            'icon_white',
-            'bg_image',
+            'icon',
+            'bg_color',
             'score_need',
             'stage',
             'description',
@@ -92,9 +91,8 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = [
             'id',
-            'icon_color',
-            'icon_white',
-            'bg_image',
+            'icon',
+            'bg_color',
             'score_need',
             'stage',
             'description',

@@ -23,7 +23,7 @@ class AchivesSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     # avatar = serializers.CharField(source='get_avatar',read_only=True,required=False)
     avatar = serializers.SerializerMethodField()
-    bg_image = serializers.SerializerMethodField()
+    # bg_image = serializers.SerializerMethodField()
     earned_achives = EarnedAchivesSerializer(many=True)
 
     class Meta:
@@ -53,7 +53,7 @@ class UserSerializer(serializers.ModelSerializer):
         if obj.avatar:
             return self.context['request'].build_absolute_uri(obj.avatar.url)
         else:
-            return 'https://icon-icons.com/icons2/1097/PNG/96/1485477097-avatar_78580.png'
+            return '/en.png'
     def get_bg_image(self, obj):
         print(obj)
         if obj.avatar:

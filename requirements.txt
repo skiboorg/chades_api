@@ -4,3 +4,5 @@ pillow
 pytils
 django-ckeditor
 djoser
+django-random-queryset
+django-colorfield

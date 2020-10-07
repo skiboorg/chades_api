@@ -1,6 +1,7 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db.models.signals import post_delete
+from colorfield.fields import ColorField
 
 from user.models import User
 
@@ -30,8 +31,8 @@ class Stage(models.Model):
 
 class Course(models.Model):
     stage = models.ForeignKey(Stage,on_delete=models.CASCADE,blank=False,null=True,verbose_name='Этап')
-    icon_color = models.ImageField('Иконка цветная', upload_to='course', blank=False, null=True)
-    icon_white = models.ImageField('Иконка белая', upload_to='course', blank=False, null=True)
+    icon = models.ImageField('Иконка белая', upload_to='course', blank=False, null=True)
+    bg_color = ColorField(default='#000000')
     bg_image = models.ImageField('Картинка для бекграунда', upload_to='course', blank=False, null=True)
     depence = models.ForeignKey('self',on_delete=models.SET_NULL,blank=True,null=True)
     score_need = models.IntegerField(blank=False, null=True)
