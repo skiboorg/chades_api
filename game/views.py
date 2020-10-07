@@ -10,9 +10,4 @@ class GetRandomVideo(generics.RetrieveAPIView):
         return PuzzleVideo.objects.all().order_by('?').first()
 
 
-class GetRandomImage(generics.RetrieveAPIView):
-    serializer_class = PuzzleImageSerializer
-
-    def get_object(self):
-        return PuzzleImage.objects.all().order_by('?').first()
 
