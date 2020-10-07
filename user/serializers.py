@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
     # avatar = serializers.CharField(source='get_avatar',read_only=True,required=False)
     avatar = serializers.SerializerMethodField()
     # bg_image = serializers.SerializerMethodField()
-    earned_achives = EarnedAchivesSerializer(many=True)
+    earned_achives = EarnedAchivesSerializer(many=True,read_only=True,required=False)
 
     class Meta:
         model = User

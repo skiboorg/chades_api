@@ -17,13 +17,18 @@ class UserUpdate(APIView):
         user = request.user
         print(json.loads(request.data['userData']))
         print(request.FILES)
-        serializer = UserSerializer(user, data=json.loads(request.data['userData']))
+        data = json.loads(request.data['userData'])
+        serializer = UserSerializer(user, data=data)
         if serializer.is_valid():
             serializer.save()
             for f in request.FILES.getlist('avatar'):
                 user.avatar = f
                 user.save()
+            if data['password1'] != '' and data['password1'] == data['password2']:
+                user.set_password(data['password1'])
+                user.save()
             return Response(status=200)
+
         else:
             print(serializer.errors)
             return Response(status=400)
