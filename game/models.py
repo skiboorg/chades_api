@@ -5,13 +5,25 @@ from django_random_queryset import RandomManager
 
 
 class PuzzleVideo(models.Model):
-    video = models.FileField('Картинка или видео', upload_to='puzzlevideo/', blank=False, null=True)
+    video = models.FileField('Видео', upload_to='puzzlevideo/', blank=False, null=True)
 
     objects = RandomManager()
 
     def __str__(self):
-        return f'Файл пазла {self.id}'
+        return f'Видео пазла {self.id}'
 
     class Meta:
-        verbose_name = "Файл пазла"
-        verbose_name_plural = "Файлы для пазлов"
+        verbose_name = "Видео пазла"
+        verbose_name_plural = "Видео для пазлов"
+
+class PuzzleImage(models.Model):
+    video = models.FileField('Картинка', upload_to='puzzleimage/', blank=False, null=True)
+
+    objects = RandomManager()
+
+    def __str__(self):
+        return f'Картинка пазла {self.id}'
+
+    class Meta:
+        verbose_name = "Картинка пазла"
+        verbose_name_plural = "Картинка для пазлов"

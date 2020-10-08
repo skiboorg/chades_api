@@ -3,3 +3,4 @@ from .models import *
 
 
 admin.site.register(PuzzleVideo)
+admin.site.register(PuzzleImage)
