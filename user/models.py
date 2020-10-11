@@ -52,7 +52,7 @@ class User(AbstractUser):
                                               related_name='finished_courses')
     progress_courses = models.ManyToManyField('shool.Course', blank=True, verbose_name='В процессе курсы',
                                               related_name='progress_courses')
-
+    expiry_time = models.DateField('Истечение аккаунта', blank=True, null=True)
 
 
     USERNAME_FIELD = 'email'

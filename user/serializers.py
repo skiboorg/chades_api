@@ -38,6 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
             'score',
             'is_vip',
             'title',
+            'expiry_time',
             'bg_image',
             'earned_achives',
             'avaiable_courses',
@@ -108,6 +109,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         print('validated_data',validated_data)
         with transaction.atomic():
             user = User.objects.create_user(**validated_data)
+            user.is_active = False
+            user.save(update_fields=["is_active"])
             if settings.SEND_ACTIVATION_EMAIL:
                 user.is_active = False
                 user.save(update_fields=["is_active"])
