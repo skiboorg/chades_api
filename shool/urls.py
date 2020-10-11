@@ -16,5 +16,6 @@ urlpatterns = [
     path('inputtests/', views.GetInputTests.as_view()),
     path('startscript/', views.StartScript.as_view()),
     path('get_banner/', views.GetBanner.as_view()),
+    path('new_cb/', views.NewCB.as_view()),
 
 ]

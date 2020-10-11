@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 from rest_framework import generics
+from .models import CallBackForm
 
 
 class LessonDone(APIView):
@@ -27,6 +28,15 @@ class LessonDone(APIView):
             return Response(status=201)
         else:
             return Response(status=200)
+
+
+class NewCB(APIView):
+    def post(self,request):
+        CallBackForm.objects.create(
+            name=request.data['name'],
+            email=request.data['email'],
+            text=request.data['text'])
+        return Response(status=200)
 
 
 class CourseOpen(APIView):

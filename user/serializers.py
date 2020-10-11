@@ -53,7 +53,7 @@ class UserSerializer(serializers.ModelSerializer):
         if obj.avatar:
             return self.context['request'].build_absolute_uri(obj.avatar.url)
         else:
-            return '/en.png'
+            return '/avatar.png'
     def get_bg_image(self, obj):
         print(obj)
         if obj.avatar:

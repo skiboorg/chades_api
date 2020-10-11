@@ -5,6 +5,18 @@ from colorfield.fields import ColorField
 
 from user.models import User
 
+class CallBackForm(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
+    text = models.TextField(max_length=255, blank=True, null=True)
+    crerated_at = models.DateField(auto_now_add=True,null=True)
+
+    def __str__(self):
+        return f'Форма обратной сваязи ID {self.id}. Дата заполнения {self.crerated_at}'
+
+    class Meta:
+        verbose_name = "Форма обратной сваязи"
+        verbose_name_plural = "Формы обратной сваязи"
 
 class Banner(models.Model):
     bg = models.ImageField('Бекграунд', upload_to='course', blank=False, null=True)
