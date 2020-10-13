@@ -42,17 +42,17 @@ class Stage(models.Model):
 
 
 class Course(models.Model):
-    stage = models.ForeignKey(Stage,on_delete=models.CASCADE,blank=False,null=True,verbose_name='Этап')
+    stage = models.ForeignKey(Stage, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Этап')
     icon = models.ImageField('Иконка белая', upload_to='course', blank=False, null=True)
     bg_color = ColorField(default='#000000')
     bg_image = models.ImageField('Картинка для бекграунда', upload_to='course', blank=False, null=True)
-    depence = models.ForeignKey('self',on_delete=models.SET_NULL,blank=True,null=True)
+    depence = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True)
     score_need = models.IntegerField(blank=False, null=True)
     points_to_balance = models.IntegerField(blank=False, null=True)
     description = models.TextField('Описание', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.description}'
+        return f'ID: {self.id} - {self.description}'
 
     class Meta:
         verbose_name = "Курс"
@@ -60,14 +60,15 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course,on_delete=models.CASCADE,blank=False,null=True,verbose_name='Курс',related_name='lessons')
+    course = models.ForeignKey(Course,on_delete=models.CASCADE,blank=False,null=True,verbose_name='Курс',
+                               related_name='lessons')
     name = models.CharField(max_length=255, blank=True, null=True)
     description = RichTextUploadingField('Описание', blank=True, null=True)
     means = RichTextUploadingField('Определения', blank=True, null=True)
     words = RichTextUploadingField('Слова', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.name}'
+        return f'ID: {self.id} - {self.name}'
 
     class Meta:
         verbose_name = "Урок"
@@ -87,12 +88,13 @@ class AvaiableLessons(models.Model):
         verbose_name_plural = "Доступные уроки"
 
 class Test(models.Model):
-    lesson = models.ForeignKey(Lesson,on_delete=models.CASCADE,blank=False,null=True,verbose_name='Урок',related_name='test')
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Урок',
+                               related_name='test')
     order_num = models.IntegerField(default=100)
     description = RichTextUploadingField('Текст', blank=True, null=True)
 
     def __str__(self):
-        return f'Тест к уроку {self.lesson.name}'
+        return f'Тест к уроку ID: {self.lesson.id} - {self.lesson.name}'
 
     class Meta:
         verbose_name = "Тест"
@@ -100,14 +102,15 @@ class Test(models.Model):
 
 
 class TestChoice(models.Model):
-    test = models.ForeignKey(Test,on_delete=models.CASCADE,blank=False,null=True,verbose_name='Тест',related_name='choices')
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Тест',
+                             related_name='choices')
     order_num = models.IntegerField(default=100)
     is_right = models.BooleanField('Это верный ответ',default=False)
     description = models.CharField('Текст',max_length=255, blank=True, null=True)
-    image=models.ImageField(blank=True,upload_to='tests/')
+    image = models.ImageField(blank=True,upload_to='tests/')
 
     def __str__(self):
-        return f'Ответ к тесту {self.test.id}'
+        return f'Ответ к тесту ID: {self.test.id}'
 
     class Meta:
         verbose_name = "Ответ"
@@ -115,13 +118,14 @@ class TestChoice(models.Model):
 
 
 class InputTest(models.Model):
-    lesson = models.ForeignKey(Lesson,on_delete=models.CASCADE,blank=False,null=True,verbose_name='Урок',related_name='input_test')
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Урок',
+                               related_name='input_test')
     order_num = models.IntegerField(default=100)
     description = RichTextUploadingField('Текст', blank=True, null=True)
     answer = models.TextField('Верный ответ', blank=True, null=True)
 
     def __str__(self):
-        return f'Тест-ввод к уроку {self.lesson.name}'
+        return f'Тест-ввод к уроку ID: {self.lesson.id} - {self.lesson.name}'
 
     class Meta:
         verbose_name = "Тест-ввод"

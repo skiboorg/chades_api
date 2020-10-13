@@ -121,7 +121,6 @@ class StartScript(APIView):
     def get(self,request):
         users = User.objects.filter(is_staff=False)
         courses = Course.objects.all()
-
         cur_course = 0
         for course in courses:
             for user in users:
@@ -135,6 +134,7 @@ class StartScript(APIView):
                         lesson.save()
                         break
         return Response(status=200)
+
 
 class GetInputTests(generics.ListAPIView):
     GetInputTests = InputTest.objects.all()
