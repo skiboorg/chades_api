@@ -67,7 +67,7 @@ class CourseOpen(APIView):
                 if checkLessons.filter(lesson=lesson).exists():
                     print('in')
                 else:
-                    print('not',lesson)
+                    print('not')
                     AvaiableLessons.objects.create(user=request.user,
                                                course=lesson.course,
                                                lesson=lesson,
