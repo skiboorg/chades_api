@@ -31,6 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'last_login',
+            'date_joined',
             'avatar',
             'nickname',
             'name',

@@ -119,7 +119,7 @@ class GetTestChoices(generics.ListAPIView):
 
 class StartScript(APIView):
     def get(self,request):
-        users = User.objects.filter(is_staff=False)
+        users = User.objects.all()
         courses = Course.objects.all()
         cur_course = 0
         for course in courses:
