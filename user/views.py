@@ -10,6 +10,13 @@ from .models import User
 from rest_framework import generics
 
 
+class AddPoints(APIView):
+    def post(self,request):
+        print(request.data)
+        request.user.score+=int(request.data['points'])
+        request.user.save()
+        return  Response(status=200)
+
 class UserUpdate(APIView):
     permission_classes = [IsAuthenticated]
 

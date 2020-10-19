@@ -8,4 +8,6 @@ urlpatterns = [
     path('update/', views.UserUpdate.as_view()),
     path('getUserEmailbyPhone/', views.getUserEmailbyPhone.as_view()),
     path('getAllAchives/', views.GetAllAchives.as_view()),
+    path('add_points/', views.AddPoints.as_view()),
+
 ]
