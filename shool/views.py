@@ -41,7 +41,6 @@ class NewCB(APIView):
 
 class CourseOpen(APIView):
     def post(self,request):
-
         checkLessons = AvaiableLessons.objects.filter(user=request.user,course_id=request.data['course'])
 
         if not checkLessons.exists():
@@ -74,9 +73,11 @@ class CourseOpen(APIView):
                                                status=0)
         return Response(status=200)
 
+
 class GetStages(generics.ListAPIView):
     queryset = Stage.objects.all()
     serializer_class = StageSerializer
+
 
 class GetCourses(generics.ListAPIView):
     queryset = Course.objects.all()
@@ -111,6 +112,7 @@ class GetTests(generics.ListAPIView):
 class GetBanner(generics.ListAPIView):
     queryset = Banner.objects.all()
     serializer_class = BannerSerializer
+
 
 class GetTestChoices(generics.ListAPIView):
     queryset = TestChoice.objects.all()
