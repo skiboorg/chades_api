@@ -60,6 +60,9 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    def __str__(self):
+        return f'Пользователь {self.email}. Окончание действия аккаунта  {self.expiry_time}'
+
 def user_post_save(sender, instance, created, **kwargs):
     if created:
         from shool.models import Course
