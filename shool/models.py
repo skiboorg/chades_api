@@ -43,12 +43,12 @@ class Stage(models.Model):
 
 class Course(models.Model):
     stage = models.ForeignKey(Stage, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Этап')
-    icon = models.ImageField('Иконка белая', upload_to='course', blank=False, null=True)
+    icon = models.ImageField('Иконка', upload_to='course', blank=False, null=True)
     bg_color = ColorField(default='#000000')
-    bg_image = models.ImageField('Картинка для бекграунда', upload_to='course', blank=False, null=True)
+    bg_image = models.ImageField('Картинка для бекграунда', upload_to='course', blank=True, null=True,editable=False)
     depence = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True)
     score_need = models.IntegerField(blank=False, null=True)
-    points_to_balance = models.IntegerField(blank=False, null=True)
+    points_to_balance = models.IntegerField('Сколько балов после завершения курса',blank=False, null=True)
     description = models.TextField('Описание', blank=True, null=True)
 
     def __str__(self):
@@ -68,7 +68,7 @@ class Lesson(models.Model):
     words = RichTextUploadingField('Слова', blank=True, null=True)
 
     def __str__(self):
-        return f'ID: {self.id} - {self.name}'
+        return f'ID урока: {self.id} - курс ID: {self.course.id}'
 
     class Meta:
         verbose_name = "Урок"
@@ -94,7 +94,7 @@ class Test(models.Model):
     description = RichTextUploadingField('Текст', blank=True, null=True)
 
     def __str__(self):
-        return f'Тест к уроку ID: {self.lesson.id} - {self.lesson.name}'
+        return f'ID: {self.id} || Тест к уроку ID: {self.lesson.id} - курса ID: {self.lesson.course.id}'
 
     class Meta:
         verbose_name = "Тест"
@@ -110,7 +110,7 @@ class TestChoice(models.Model):
     image = models.ImageField(blank=True,upload_to='tests/')
 
     def __str__(self):
-        return f'Ответ к тесту ID: {self.test.id}'
+        return f'Ответ к тесту ID: {self.test.id} - ID урока: {self.test.lesson.id}- ID курса: {self.test.lesson.course.id}'
 
     class Meta:
         verbose_name = "Ответ"
@@ -125,7 +125,7 @@ class InputTest(models.Model):
     answer = models.TextField('Верный ответ', blank=True, null=True)
 
     def __str__(self):
-        return f'Тест-ввод к уроку ID: {self.lesson.id} - {self.lesson.name}'
+        return f'Тест-ввод к уроку ID: {self.lesson.id} - курса ID: {self.lesson.course.id}'
 
     class Meta:
         verbose_name = "Тест-ввод"
