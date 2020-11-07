@@ -8,7 +8,34 @@ from .services import create_random_string
 from .serializers import *
 from .models import User
 from rest_framework import generics
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
+
+class CheckEmail(APIView):
+    def post(self,request):
+        print(request.data)
+        user = None
+        email = False
+
+        try:
+            validate_email(request.data['email'])
+            email = True
+        except ValidationError:
+            pass
+
+        if email:
+            try:
+                user = User.objects.get(email=request.data['email'])
+            except:
+                pass
+            print(user)
+            if user:
+                return Response({'status': 'found'}, status=200)
+            else:
+                return Response({'status': 'notfound'}, status=200)
+        else:
+            return Response({'status': 'emailbad'}, status=200)
 
 class AddPoints(APIView):
     def post(self,request):

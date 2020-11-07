@@ -45,6 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
             'avaiable_courses',
             'finished_courses',
             'progress_courses',
+            'vi_chat',
 
 
 
@@ -79,8 +80,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
             User._meta.pk.name,
             "password",
             "name",
+            "email",
             "nickname",
             "promo",
+            "vi_chat",
         )
 
     def validate(self, attrs):

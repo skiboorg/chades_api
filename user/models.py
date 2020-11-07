@@ -38,9 +38,10 @@ class User(AbstractUser):
     #                                      verbose_name='Персональный портнерский код')
 
     avatar = models.ImageField('Фото', upload_to='user',blank=True,null=True)
-    nickname = models.CharField('Ник', max_length=50, blank=True, null=True, default='Иван')
+    nickname = models.CharField('Ник', max_length=50, blank=True, null=True)
     name = models.CharField('Имя', max_length=50, blank=True, null=True, default='Иван')
     email = models.EmailField('Эл. почта', blank=True, null=True, unique=True)
+    vi_chat = models.CharField('vichat', blank=True, max_length=100, null=True)
     score = models.IntegerField('Баллы', default=0)
     is_vip = models.BooleanField('VIP?', default=False)
     title = models.CharField('Титул', max_length=255, blank=True, null=True)

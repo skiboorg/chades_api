@@ -1,4 +1,4 @@
-from django.urls import path,include
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -9,5 +9,6 @@ urlpatterns = [
     path('getUserEmailbyPhone/', views.getUserEmailbyPhone.as_view()),
     path('getAllAchives/', views.GetAllAchives.as_view()),
     path('add_points/', views.AddPoints.as_view()),
+    path('check_email/', views.CheckEmail.as_view()),
 
 ]
