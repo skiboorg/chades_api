@@ -4,6 +4,7 @@ from .models import *
 from .serializers import *
 from rest_framework import generics
 from .models import CallBackForm
+from .tasks import checkLessons
 
 
 class LessonDone(APIView):
@@ -121,20 +122,8 @@ class GetTestChoices(generics.ListAPIView):
 
 class StartScript(APIView):
     def get(self,request):
-        users = User.objects.all()
-        courses = Course.objects.all()
-        cur_course = 0
-        for course in courses:
-            for user in users:
-                lessons = AvaiableLessons.objects.filter(course=course,user=user)
-                # print('course',course)
-                # print('user',user)
-                # print(lessons)
-                for lesson in lessons:
-                    if lesson.status == 0:
-                        lesson.status = 1
-                        lesson.save()
-                        break
+        checkLessons.delay()
+
         return Response(status=200)
 
 
