@@ -8,3 +8,4 @@ django-random-queryset
 django-colorfield
 celery
 redis
+alipay-sdk-python
