@@ -69,6 +69,7 @@ def user_post_save(sender, instance, created, **kwargs):
         from shool.models import Course
         first_course = Course.objects.all().first()
         instance.avaiable_courses.add(first_course.id)
+        instance.is_active=True
         instance.save()
 
 post_save.connect(user_post_save, sender=User)
