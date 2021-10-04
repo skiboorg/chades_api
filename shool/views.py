@@ -132,54 +132,90 @@ class GetInputTests(generics.ListAPIView):
     GetInputTests = InputTest.objects.all()
     serializer_class = InputTestSerializer
 
+# import logging
+# from alipay.aop.api.AlipayClientConfig import AlipayClientConfig
+# from alipay.aop.api.DefaultAlipayClient import DefaultAlipayClient
+# from alipay.aop.api.domain.AlipayTradePagePayModel import AlipayTradePagePayModel
+# from alipay.aop.api.domain.SettleDetailInfo import SettleDetailInfo
+# from alipay.aop.api.domain.SettleInfo import SettleInfo
+# from alipay.aop.api.domain.SubMerchant import SubMerchant
+# from alipay.aop.api.request.AlipayTradePagePayRequest import AlipayTradePagePayRequest
+#
+# logging.basicConfig(
+#     level=logging.INFO,
+#     format='%(asctime)s %(levelname)s %(message)s',
+#     filemode='a',)
+# logger = logging.getLogger('')
+#
+#
+# class TestPay(APIView):
+#
+#     def get(self,request):
+#         alipay_client_config = AlipayClientConfig()
+#         alipay_client_config.server_url = 'https://openapi.alipay.com/gateway.do'
+#         alipay_client_config.app_id = settings.APP_ID
+#         alipay_client_config.app_private_key = settings.API_PRIVATE_KEY
+#         alipay_client_config.alipay_public_key = settings.API_PUBLIC_KEY
+#         alipay_client_config.sign_type = 'RSA2'
+#
+#         client = DefaultAlipayClient(alipay_client_config=alipay_client_config, logger=logger)
+#
+#         model = AlipayTradePagePayModel()
+#         model.out_trade_no = "pay201805020000226"
+#         model.total_amount = 1.00
+#         model.subject = "测试"
+#         model.body = "支付宝测试"
+#         model.product_code = "FAST_INSTANT_TRADE_PAY"
+#         request = AlipayTradePagePayRequest(biz_model=model)
+#         response = client.page_execute(request, http_method="GET")
+#         print("alipay.trade.page.pay response:" + response)
+#
+#         return Response(response,status=200)
+
+
 import logging
 from alipay.aop.api.AlipayClientConfig import AlipayClientConfig
 from alipay.aop.api.DefaultAlipayClient import DefaultAlipayClient
-from alipay.aop.api.domain.AlipayTradePagePayModel import AlipayTradePagePayModel
-from alipay.aop.api.domain.SettleDetailInfo import SettleDetailInfo
-from alipay.aop.api.domain.SettleInfo import SettleInfo
-from alipay.aop.api.domain.SubMerchant import SubMerchant
-from alipay.aop.api.request.AlipayTradePagePayRequest import AlipayTradePagePayRequest
-
+from alipay.aop.api.domain.AlipayTradeCreateModel import AlipayTradeCreateModel
+from alipay.aop.api.request.AlipayTradeCreateRequest import AlipayTradeCreateRequest
+from alipay.aop.api.response.AlipayTradeCreateResponse import AlipayTradeCreateResponse
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s %(message)s',
     filemode='a',)
 logger = logging.getLogger('')
-
-
 class TestPay(APIView):
-
     def get(self,request):
         alipay_client_config = AlipayClientConfig()
-        alipay_client_config.server_url = 'https://openapi.alipay.com/gateway.do'
-        alipay_client_config.app_id = settings.APP_ID
-        alipay_client_config.app_private_key = settings.API_PRIVATE_KEY
-        alipay_client_config.alipay_public_key = settings.API_PUBLIC_KEY
-        alipay_client_config.sign_type = 'RSA2'
-
-        client = DefaultAlipayClient(alipay_client_config=alipay_client_config, logger=logger)
-
-        model = AlipayTradePagePayModel()
-        model.out_trade_no = "pay201805020000226"
-        model.total_amount = 50
-        model.subject = "测试"
-        model.body = "支付宝测试"
-        model.product_code = "FAST_INSTANT_TRADE_PAY"
-        settle_detail_info = SettleDetailInfo()
-        settle_detail_info.amount = 50
-        settle_detail_info.trans_in_type = "userId"
-        settle_detail_info.trans_in = "2088302300165604"
-        settle_detail_infos = list()
-        settle_detail_infos.append(settle_detail_info)
-        settle_info = SettleInfo()
-        settle_info.settle_detail_infos = settle_detail_infos
-        model.settle_info = settle_info
-        sub_merchant = SubMerchant()
-        sub_merchant.merchant_id = "2088301300153242"
-        model.sub_merchant = sub_merchant
-        request = AlipayTradePagePayRequest(biz_model=model)
-        response = client.page_execute(request, http_method="GET")
-        print("alipay.trade.page.pay response:" + response)
-
-        return Response(response,status=200)
+        alipay_client_config.server_url = 'https://openapi.alipaydev.com/gateway.do'
+        # alipay_client_config.app_id = '请填写appi_id'
+        # alipay_client_config.app_private_key = '请填写开发者私钥去头去尾去回车，单行字符串'
+        # alipay_client_config.alipay_public_key = '请填写支付宝公钥，单行字符串'
+        client = DefaultAlipayClient(alipay_client_config, logger)
+        # 构造请求参数对象
+        model = AlipayTradeCreateModel()
+        model.out_trade_no = "20150320010101001";
+        model.total_amount = "88.88";
+        model.subject = "Iphone6 16G";
+        model.buyer_id = "2088102177846880";
+        request = AlipayTradeCreateRequest(biz_model=model)
+        # 执行API调用
+        response_content = ''
+        try:
+            response_content = client.execute(request)
+        except Exception as e:
+            print(e)
+        if not response_content:
+            print("failed execute")
+        else:
+            # 解析响应结果
+            response = AlipayTradeCreateResponse()
+            response.parse_response_content(response_content)
+            # 响应成功的业务处理
+            if response.is_success():
+                # 如果业务成功，可以通过response属性获取需要的值
+                print("get response trade_no:" + response.trade_no)
+            # 响应失败的业务处理
+            else:
+                # 如果业务失败，可以从错误码中可以得知错误情况，具体错误码信息可以查看接口文档
+                print(response.code + "," + response.msg + "," + response.sub_code + "," + response.sub_msg)
