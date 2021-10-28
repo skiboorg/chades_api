@@ -9,3 +9,5 @@ django-colorfield
 celery
 redis
 alipay-sdk-python
+python-alipay-sdk
+rsa
