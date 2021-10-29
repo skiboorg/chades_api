@@ -6,6 +6,7 @@ from rest_framework import generics
 from .models import CallBackForm
 from .tasks import checkLessons
 from .pay import do_payment
+
 import settings
 
 class LessonDone(APIView):
@@ -183,7 +184,64 @@ logging.basicConfig(
     filemode='a',)
 logger = logging.getLogger('')
 
+
+APPID = '2021002136604704'
+private_key = '''
+-----BEGIN RSA PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCtflV/V6Fmu44vjNWxxmSgx2+fg8YymO4No3khE8VJ7qR/520xiPpaVc/8AdTF/UBzPYLHw2AwoTm5fXcMkCK1+IPryVXL31xfwF8ITK/lwjapVvSPMIrzc/PCpEBTUE3gi+fMj9mhAPjcCbKRjhjT3MazBuCetu9pQSbUvKZ+O77GLuNvmO36mHbqZ+1w7xTLHETzjKo3mEs9StSQyGopPy0gik77IfV2a/9DHTanZYYr3ZM2/vmgKDoJiRnEa8Y2fuGn5wSKG+gY0vE2oPqMkrNNGY0EKOKjgaqHNg08DK7xMTIEF7qeWMRQLvFCmWAeG5zKkF69PQgTSQHph9SRAgMBAAECggEAaAmOM6LVAsoN5a3Kp6SUy2VNJpbaz5StjDgvdwpoEIGu25RoAoBlwK4c3r4qXeAUOgb02d3rXL4R4429SidU6VJxqX8+l9cFidXOJyf1gw4HwVyHoyY07PDniBz/Bfbt/G1pP14z3zy5/xlBn89aTBHkhY7mO8bvomqTYpcOMDubgSYsVIdFkTZupzNXeltF50IcSiOKTw1ziaslT7zCfgJq9OiFd5kM6b+Xy2HptABBL8NPW/m2XE05PSDL2J3MJE96AnCegulBSaWTJKVwBQtNmuH7wNHqdVnXr7ABZZnVOKLBbFnEprIc/OZi3r4lxYtPTcab38OxiCunShCJwQKBgQD31kcPnZDQlal+I+HC1Auhhel6f6Bt2htIwlc93gRcrigxIT55s1yPbcpFqHiOhaEOhH2+UPQ7Y1qcKaRIn1nivtM3wQ/OLpmC6KsHsirZRLNzOv91URMPMesqtlAb1MTPL6V4iE8sNGaHFxxRpa9AyQ1EdgzAXVGd0M9kklB1HQKBgQCzNTQcFQYy9yjeeXAAXXNHEBiiMdiPhNxHj3dVl3jDLVvevaN4T9UAtbfje5LGeYLgc2pdLRBHH1zWHTdhzGQDFe/joRkGBtQ1sfllqOJItp1JC7iMQXhmgihT7YJ68Uc69kHXqYRV0TbSD6XXXYouUQKj8AD2lbOy7kEg9tzHBQKBgQCneTbfyHvZV6kHQjwGqb+KULFrQ98nHGGfkyPc/LA56L3kJTDQkHGVwn0TATsmJAqngsRt3MqNbyAFsuX+5R+aZ5TXcjC6BSdbHNqmArGNzCzvSwjhP/3/IJ5naHdNt0OfNfU9M+88UdSOqQFL8wgwYSwD/Tm0q9rBKB9dOLoByQKBgD+1EDtTdgq0NsEwJpLapdqDbF5snfIXZz/BTskMug+YlmpOvEhPCQfhkee6zGjmVZJ5NTy+gmTmT1iGtmN8B6nZKJihcoXj85jLFj//k8IJuUx4cDjcJXM7nh6H9rTCBXJ+jNWgG71uTLDMg0ZWqILipa+l6JHAkktvy5NubvoJAoGBAIwZsoS8K07SZQqfZDRIlVVtxnNFymKLR9v9EI5M77qGNSlyi+WuSHpI1pHhfdIyAPKo9buBuiboTNdmpPyQysqKaH/i59t2clDFu3vWFL7qh/Hk2+0LkpRs9VXhvBiP7JzFx6YgJ3qZ7bzgkHQ+EKAxvYBq+qogELwXr1AUsuGS
+-----END RSA PRIVATE KEY-----
+'''
+public_key = '''
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArX5Vf1ehZruOL4zVscZkoMdvn4PGMpjuDaN5IRPFSe6kf+dtMYj6WlXP/AHUxf1Acz2Cx8NgMKE5uX13DJAitfiD68lVy99cX8BfCEyv5cI2qVb0jzCK83PzwqRAU1BN4IvnzI/ZoQD43AmykY4Y09zGswbgnrbvaUEm1Lymfju+xi7jb5jt+ph26mftcO8UyxxE84yqN5hLPUrUkMhqKT8tIIpO+yH1dmv/Qx02p2WGK92TNv75oCg6CYkZxGvGNn7hp+cEihvoGNLxNqD6jJKzTRmNBCjio4GqhzYNPAyu8TEyBBe6nljEUC7xQplgHhucypBevT0IE0kB6YfUkQIDAQAB
+-----END PUBLIC KEY-----
+'''
+notify_url = 'http://127.0.0.1/reback'
+
+APIPAY = "https://openapi.alipaydev.com/gateway.do?"
+DEBUG=True
+
+# 正式上用这个
+
+# BASE_DIR = os.getcwd()
+# APPID = '2021002136604704'
+# private_key = open(os.path.join(BASE_DIR,'private_key.txt')).read()
+# public_key  = open(os.path.join(BASE_DIR,'public_key.txt')).read()
+#APIPAY = "https://openapi.alipay.com/gateway.do?"
+
+from alipay import AliPay
+
+import time
+# import Response
+
+def alipay():  # 之前是 pay_result
+    ap = AliPay(
+        appid=APPID,
+        app_notify_url=notify_url,  # 默认回调url
+        app_private_key_string=private_key,
+        alipay_public_key_string=public_key,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+        sign_type="RSA2",  # RSA 或者 RSA2
+        debug=DEBUG  # 默认False ,若开启则使用沙盒环境的支付宝公钥
+    )
+
+    return ap
+
+def pay(ap):
+    order_string = ap.api_alipay_trade_page_pay(
+        total_amount=9274700,  # 价格
+        subject='test pay',  # 主题
+        out_trade_no=str(time.time()).replace(',', '')  # 订单ID
+    )
+
+    pay_url = APIPAY + order_string  # 调用支付宝支付接口
+
+    return pay_url
+
 class TestPay(APIView):
+
     def get(self,request):
-       do_payment()
+       #do_payment()
+       ap = alipay()
+       url = pay(ap)
+       print(url)
 
