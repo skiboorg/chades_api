@@ -242,10 +242,11 @@ def pay(ap):
 class TestPay(APIView):
 
     def get(self,request):
-       #do_payment()
-       ap = alipay()
-       url = pay(ap)
-       print(url)
+        #do_payment()
+        ap = alipay()
+        url = pay(ap)
+        print(url)
+        return Response(url, status=200)
 
 class PayNotify(APIView):
     def get(self,request):
