@@ -155,8 +155,8 @@ class GetInputTests(generics.ListAPIView):
 #         alipay_client_config = AlipayClientConfig()
 #         alipay_client_config.server_url = 'https://openapi.alipay.com/gateway.do'
 #         alipay_client_config.app_id = settings.APP_ID
-#         alipay_client_config.app_private_key = settings.API_PRIVATE_KEY
-#         alipay_client_config.alipay_public_key = settings.API_PUBLIC_KEY
+#         alipay_client_config.app_private_key = settings.private_key
+#         alipay_client_config.alipay_public_key = settings.public_key
 #         alipay_client_config.sign_type = 'RSA2'
 #
 #         client = DefaultAlipayClient(alipay_client_config=alipay_client_config, logger=logger)
@@ -176,7 +176,7 @@ class GetInputTests(generics.ListAPIView):
 
 from alipay import AliPay, DCAliPay, ISVAliPay
 from alipay.utils import AliPayConfig
-
+import os
 import logging
 logging.basicConfig(
     level=logging.INFO,
@@ -186,28 +186,29 @@ logger = logging.getLogger('')
 
 
 APPID = '2021002136604704'
-private_key = '''
------BEGIN RSA PRIVATE KEY-----
-MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCtflV/V6Fmu44vjNWxxmSgx2+fg8YymO4No3khE8VJ7qR/520xiPpaVc/8AdTF/UBzPYLHw2AwoTm5fXcMkCK1+IPryVXL31xfwF8ITK/lwjapVvSPMIrzc/PCpEBTUE3gi+fMj9mhAPjcCbKRjhjT3MazBuCetu9pQSbUvKZ+O77GLuNvmO36mHbqZ+1w7xTLHETzjKo3mEs9StSQyGopPy0gik77IfV2a/9DHTanZYYr3ZM2/vmgKDoJiRnEa8Y2fuGn5wSKG+gY0vE2oPqMkrNNGY0EKOKjgaqHNg08DK7xMTIEF7qeWMRQLvFCmWAeG5zKkF69PQgTSQHph9SRAgMBAAECggEAaAmOM6LVAsoN5a3Kp6SUy2VNJpbaz5StjDgvdwpoEIGu25RoAoBlwK4c3r4qXeAUOgb02d3rXL4R4429SidU6VJxqX8+l9cFidXOJyf1gw4HwVyHoyY07PDniBz/Bfbt/G1pP14z3zy5/xlBn89aTBHkhY7mO8bvomqTYpcOMDubgSYsVIdFkTZupzNXeltF50IcSiOKTw1ziaslT7zCfgJq9OiFd5kM6b+Xy2HptABBL8NPW/m2XE05PSDL2J3MJE96AnCegulBSaWTJKVwBQtNmuH7wNHqdVnXr7ABZZnVOKLBbFnEprIc/OZi3r4lxYtPTcab38OxiCunShCJwQKBgQD31kcPnZDQlal+I+HC1Auhhel6f6Bt2htIwlc93gRcrigxIT55s1yPbcpFqHiOhaEOhH2+UPQ7Y1qcKaRIn1nivtM3wQ/OLpmC6KsHsirZRLNzOv91URMPMesqtlAb1MTPL6V4iE8sNGaHFxxRpa9AyQ1EdgzAXVGd0M9kklB1HQKBgQCzNTQcFQYy9yjeeXAAXXNHEBiiMdiPhNxHj3dVl3jDLVvevaN4T9UAtbfje5LGeYLgc2pdLRBHH1zWHTdhzGQDFe/joRkGBtQ1sfllqOJItp1JC7iMQXhmgihT7YJ68Uc69kHXqYRV0TbSD6XXXYouUQKj8AD2lbOy7kEg9tzHBQKBgQCneTbfyHvZV6kHQjwGqb+KULFrQ98nHGGfkyPc/LA56L3kJTDQkHGVwn0TATsmJAqngsRt3MqNbyAFsuX+5R+aZ5TXcjC6BSdbHNqmArGNzCzvSwjhP/3/IJ5naHdNt0OfNfU9M+88UdSOqQFL8wgwYSwD/Tm0q9rBKB9dOLoByQKBgD+1EDtTdgq0NsEwJpLapdqDbF5snfIXZz/BTskMug+YlmpOvEhPCQfhkee6zGjmVZJ5NTy+gmTmT1iGtmN8B6nZKJihcoXj85jLFj//k8IJuUx4cDjcJXM7nh6H9rTCBXJ+jNWgG71uTLDMg0ZWqILipa+l6JHAkktvy5NubvoJAoGBAIwZsoS8K07SZQqfZDRIlVVtxnNFymKLR9v9EI5M77qGNSlyi+WuSHpI1pHhfdIyAPKo9buBuiboTNdmpPyQysqKaH/i59t2clDFu3vWFL7qh/Hk2+0LkpRs9VXhvBiP7JzFx6YgJ3qZ7bzgkHQ+EKAxvYBq+qogELwXr1AUsuGS
------END RSA PRIVATE KEY-----
-'''
-public_key = '''
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArX5Vf1ehZruOL4zVscZkoMdvn4PGMpjuDaN5IRPFSe6kf+dtMYj6WlXP/AHUxf1Acz2Cx8NgMKE5uX13DJAitfiD68lVy99cX8BfCEyv5cI2qVb0jzCK83PzwqRAU1BN4IvnzI/ZoQD43AmykY4Y09zGswbgnrbvaUEm1Lymfju+xi7jb5jt+ph26mftcO8UyxxE84yqN5hLPUrUkMhqKT8tIIpO+yH1dmv/Qx02p2WGK92TNv75oCg6CYkZxGvGNn7hp+cEihvoGNLxNqD6jJKzTRmNBCjio4GqhzYNPAyu8TEyBBe6nljEUC7xQplgHhucypBevT0IE0kB6YfUkQIDAQAB
------END PUBLIC KEY-----
-'''
-notify_url = 'http://127.0.0.1/reback'
+# private_key = '''
+# -----BEGIN RSA PRIVATE KEY-----
+# MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCYXEPPGnZg585QK6FH5ARBUvd8Xfa0FlY2bx80chzD2L6+VBAZTHAxmzx8osLi/TPkutUamdchbBgWbKtkVxhvGSim7WLg803CsJfdaposcWc93n/8NYNeDrsdbH4Y/njtMRYKUNV6QwPexo3gKWLNKMXtcPX2pupj7nAHJj0Gd87HRl+OUu9/PwCb16JwREFXW2GnAow6HP1EaAMN00fh2zVzFowo1BWyZj1btq2YeniwzbJ/oN5sEtq8mx9cpC89q5SyTbwjiJbwchJEeU4MQ6LIJH6RR76s4yNOdHMyk3nSKLTfXssPk45E8bChd9A9Wy4oxZsK0MxcUVMEKBlBAgMBAAECggEBAIPPvrJb2HI52VmuhVdmwu+o0Yd820Qt1uQ8+qgq2QvuZgbPPyZD5QRloszJGwW5vL1zjY337hByLdyooxap6u+iunLACL1IgMugb6IU6dDtQz5ZUixmN4KWB/eKtwT0krXRs5m1GRsvAxgmevOlml6XmbSz93cuLLXLwIvO3xjKDgEHHVsXJkgGNvAs1yQsFmtX5bFtFpaocR2Q7dTriT5bKVJ3ZFtJoh8kFQKZ6w9FQjlEjY/+n/G4Y2kOdGS2NP/y/qkLe3riTFxmU1iA5vv+hGT+ExQDHjcpqY6ZXHfgCY81FZ1PAWtcdlF85qYXUf9LLxSf7QKG0n2pUd+CXukCgYEA7nU+x8WsXwJJK6xuuvpoGg/1SPI+DJyM9cbiZDT3ZV2WEaWfqFIOVyETc5kXXyQzeBeltNuDYohSwjfHVRCItX415PcgLuPtgSDSCXC5QQgV9Rd8z4laYxrQHxTYRQcP0Z/UHUMXKQ2RyanXjbUSAgr6H1Gt/KiyT/XCKdhdBV8CgYEAo5GWwe+yBIWuanK4a0VoKBN9wE/Cl9FdY2szA5b+qOdihFH0KeSZDl1s4pA6oRErGdqINsOoPBtpYbiSUGIKChQXesb9Kj9j2/pTijpFJEiKQV+yPWStL/ZGaeoA+xR5x8m6xDD4TrFQC0lINVmMDGK9dp4GdnehSQZqGkIfxV8CgYAXWiAFzFPvEfg8cKx/Xxpmwv1QYXi2H3amcw2kppM7uAiEPeX+w9pnqfOPtIRXauIndplhtsWNFrCUGIZKzE23CF8axyC9ttCBfsdS6VkbB0GvONeeM2NIpU2QXag4SlLAQpixLOrNuGh4iUt0szDKRmzsOEGDprmfnv+evXOOnQKBgGzNiWTT1qyfZ9ezG+1vK8uMu5dS9vQZ9m8Nfc+jfx5HXAb8pNfBEfa2Opmyqu09CFiYPwd+usfQzBaOufTyYg82MjAfcYPKytgm+a7298sc3aqCx4ODFpjSzx/g4mohwqgdDjk3AdUGqWH4iynBuSD8BV+D2nSvOv/iXm29EnktAoGARkQuyNQe9krg+T9LfVYEoLSVvyBcU2DwpHq0VfUJZ6D1OBdL91hjrFvg9pDJ7Q77u91dnDs3HRr+IdTktc8ADr6/Fx1iOhy3BiYj9xSkdpNW4n3sQkHkn9/K5qG9kdIIDvfXIIjPZvpjF0D2cife9eRKUbJz9fis2v54eouNnoY=
+# -----END RSA PRIVATE KEY-----
+# '''
+# public_key = '''
+# -----BEGIN PUBLIC KEY-----
+# MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhDM9ADCcOG64I07E58i8+lJtHt6AgDRdmSPEK3O8BBWnOADZI4zaMTbVkKg6/Q7qc7h6c8QCV7RTGxN2yvi4NXjykZYtvpHNFoCCUE8sFaZogav8rUmWUxqtkSgyvbQaE+++oCmgDyDITSO9j9ol56E0SAutdmFRPPMM6GHUUBM8af3mTXGT0Fy/OMREPFLTiKJ/JfCLx4ZCQBYzJMaUD7XYaLVYoLBW+X6nBJFIL8rnxebChXR3h7G+ucPrDK6HobGPtInNILP4xN/SG7p8NAJByo3dMaW2fmgLnZgUqW6OGbq0vSX/UxHpUVjK4trKB0PadduFk3+dZj10WhODVQIDAQAB
+# -----END PUBLIC KEY-----
+# '''
+notify_url = 'http://qrlevel.cn/api/v1/shool/pay_notify'
 
 APIPAY = "https://openapi.alipaydev.com/gateway.do?"
 DEBUG=True
 
 # 正式上用这个
 
-# BASE_DIR = os.getcwd()
+
+BASE_DIR = os.getcwd()
 # APPID = '2021002136604704'
-# private_key = open(os.path.join(BASE_DIR,'private_key.txt')).read()
-# public_key  = open(os.path.join(BASE_DIR,'public_key.txt')).read()
-#APIPAY = "https://openapi.alipay.com/gateway.do?"
+private_key = open(os.path.join(BASE_DIR,'private_key.txt')).read()
+public_key  = open(os.path.join(BASE_DIR,'public_key.txt')).read()
+APIPAY = "https://openapi.alipay.com/gateway.do?"
 
 from alipay import AliPay
 
@@ -218,6 +219,7 @@ def alipay():  # 之前是 pay_result
     ap = AliPay(
         appid=APPID,
         app_notify_url=notify_url,  # 默认回调url
+
         app_private_key_string=private_key,
         alipay_public_key_string=public_key,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
         sign_type="RSA2",  # RSA 或者 RSA2
@@ -228,7 +230,7 @@ def alipay():  # 之前是 pay_result
 
 def pay(ap):
     order_string = ap.api_alipay_trade_page_pay(
-        total_amount=9274700,  # 价格
+        total_amount=10,  # 价格
         subject='test pay',  # 主题
         out_trade_no=str(time.time()).replace(',', '')  # 订单ID
     )
@@ -245,3 +247,13 @@ class TestPay(APIView):
        url = pay(ap)
        print(url)
 
+class PayNotify(APIView):
+    def get(self,request):
+        print('get')
+        print(self.request.query_params)
+        return Response(status=200)
+
+    def post(self, request):
+        print('post')
+        print(request.data)
+        return Response(status=200)
