@@ -19,5 +19,4 @@ urlpatterns = [
     path('new_cb/', views.NewCB.as_view()),
     path('create_pay/', views.CreatePay.as_view()),
     path('pay_notify/', views.PayNotify.as_view()),
-    # path('pay_notify/', views.pay_notify, name='pay_notify'),
 ]

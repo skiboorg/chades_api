@@ -212,20 +212,17 @@ class PayNotify(APIView):
 
         out_trade_no = request.data.get('out_trade_no')
         trade_status = request.data.get('trade_status')
-        print(out_trade_no)
-        print(trade_status)
-        print(out_trade_no.split('_'))
+        # print(out_trade_no)
+        # print(trade_status)
+        # print(out_trade_no.split('_'))
         months = int(out_trade_no.split('_')[2])
         user_id = out_trade_no.split('_')[4]
         if trade_status == 'TRADE_SUCCESS':
             user = User.objects.get(id=user_id)
-            print(user)
-            print(datetime.today())
-            print(datetime.today()+ relativedelta(months=months))
+            # print(user)
+            # print(datetime.today())
+            # print(datetime.today()+ relativedelta(months=months))
             user.expiry_time = datetime.today()+ relativedelta(months=months)
             user.save()
         return Response(status=200)
 
-
-def pay_notify(request):
-    return JsonResponse({'s': 'ss'})
