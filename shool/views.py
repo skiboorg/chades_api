@@ -7,7 +7,7 @@ from .serializers import *
 from rest_framework import generics
 from .models import CallBackForm
 from .tasks import checkLessons
-from .pay import do_payment
+# from .pay import do_payment
 from django.utils import timezone
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
